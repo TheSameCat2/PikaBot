@@ -89,7 +89,7 @@ docker run --rm -it \
   palbot
 ```
 
-## docker-compose (Unraid style)
+## docker-compose (Local build)
 
 `docker-compose.yml` is included:
 
@@ -124,15 +124,19 @@ GitHub setup:
 
 ## Deploy on Server from GHCR
 
-Use `docker-compose.server.yml` (image-based deployment, no local build on server).
+Use `docker-compose.server.yml` (image-based deployment, no source checkout/build needed on Unraid).
+
+Unraid-optimized defaults in the compose file:
+- appdata bind: `/mnt/user/appdata/palbot/data:/data`
+- docker socket bind: `/var/run/docker.sock:/var/run/docker.sock`
+- `host.docker.internal` mapped to host gateway (so `RCON_HOST=host.docker.internal` works)
 
 Example:
 
 ```bash
 cp .env.example .env
 # edit .env with production values
-mkdir -p data
-export PALBOT_IMAGE=ghcr.io/<your-github-user>/palbot:main
+mkdir -p /mnt/user/appdata/palbot/data
 docker compose -f docker-compose.server.yml pull
 docker compose -f docker-compose.server.yml up -d
 ```
@@ -140,10 +144,19 @@ docker compose -f docker-compose.server.yml up -d
 To update after a new push to `main`:
 
 ```bash
-export PALBOT_IMAGE=ghcr.io/<your-github-user>/palbot:main
 docker compose -f docker-compose.server.yml pull
 docker compose -f docker-compose.server.yml up -d
 ```
+
+### Portainer Notes (Unraid)
+
+Use `docker-compose.server.yml` as your Stack file and set environment variables in Portainer:
+- `PALBOT_IMAGE=ghcr.io/<your-github-user>/palbot:main`
+- `PALBOT_DATA_PATH=/mnt/user/appdata/palbot/data`
+- bot config values (`MATRIX_*`, `ALLOWED_MXIDS`, `RCON_*`, etc.)
+
+If your Palworld RCON is published on the Unraid host, keep:
+- `RCON_HOST=host.docker.internal`
 
 ## Command Behavior
 
