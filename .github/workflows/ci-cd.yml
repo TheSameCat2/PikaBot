@@ -14,7 +14,6 @@ permissions:
 
 env:
   REGISTRY: ghcr.io
-  IMAGE_NAME: palbot
 
 jobs:
   test:
@@ -59,7 +58,7 @@ jobs:
         id: meta
         uses: docker/metadata-action@v5
         with:
-          images: ${{ env.REGISTRY }}/${{ github.repository_owner }}/${{ env.IMAGE_NAME }}
+          images: ghcr.io/thesamecat2/palbot
           tags: |
             type=ref,event=branch
             type=ref,event=tag

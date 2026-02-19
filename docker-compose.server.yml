@@ -1,6 +1,6 @@
 services:
   palbot:
-    image: ${PALBOT_IMAGE:-ghcr.io/your-github-user/palbot:main}
+    image: ${PALBOT_IMAGE:-ghcr.io/thesamecat2/palbot:main}
     container_name: ${PALBOT_CONTAINER_NAME:-palbot}
     restart: unless-stopped
     env_file:

@@ -111,10 +111,10 @@ Behavior:
 - On tag push like `v1.2.3`: run tests, build image, and push a version-tagged image.
 
 Published image:
-- `ghcr.io/<your-github-user>/palbot:main`
-- `ghcr.io/<your-github-user>/palbot:latest` (default branch)
-- `ghcr.io/<your-github-user>/palbot:sha-<commit>`
-- `ghcr.io/<your-github-user>/palbot:vX.Y.Z` (when pushing tags)
+- `ghcr.io/thesamecat2/palbot:main`
+- `ghcr.io/thesamecat2/palbot:latest` (default branch)
+- `ghcr.io/thesamecat2/palbot:sha-<commit>`
+- `ghcr.io/thesamecat2/palbot:vX.Y.Z` (when pushing tags)
 
 GitHub setup:
 1. Push this repo to GitHub.
@@ -151,7 +151,7 @@ docker compose -f docker-compose.server.yml up -d
 ### Portainer Notes (Unraid)
 
 Use `docker-compose.server.yml` as your Stack file and set environment variables in Portainer:
-- `PALBOT_IMAGE=ghcr.io/<your-github-user>/palbot:main`
+- `PALBOT_IMAGE=ghcr.io/thesamecat2/palbot:main`
 - `PALBOT_DATA_PATH=/mnt/user/appdata/palbot/data`
 - bot config values (`MATRIX_*`, `ALLOWED_MXIDS`, `RCON_*`, etc.)
 
