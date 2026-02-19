@@ -101,6 +101,50 @@ It mounts:
 - `/var/run/docker.sock:/var/run/docker.sock`
 - `./data:/data`
 
+## CI/CD (GitHub Actions + GHCR)
+
+This repo includes `.github/workflows/ci-cd.yml`.
+
+Behavior:
+- On every pull request: run `go test ./...` and build the Docker image (without pushing).
+- On push to `main`: run tests, build image, and push to GHCR.
+- On tag push like `v1.2.3`: run tests, build image, and push a version-tagged image.
+
+Published image:
+- `ghcr.io/<your-github-user>/palbot:main`
+- `ghcr.io/<your-github-user>/palbot:latest` (default branch)
+- `ghcr.io/<your-github-user>/palbot:sha-<commit>`
+- `ghcr.io/<your-github-user>/palbot:vX.Y.Z` (when pushing tags)
+
+GitHub setup:
+1. Push this repo to GitHub.
+2. Ensure Actions are enabled for the repo.
+3. Ensure package write is allowed for `GITHUB_TOKEN` (workflow already requests `packages: write`).
+4. In GHCR package settings, set visibility to public if you want server pulls without authentication.
+
+## Deploy on Server from GHCR
+
+Use `docker-compose.server.yml` (image-based deployment, no local build on server).
+
+Example:
+
+```bash
+cp .env.example .env
+# edit .env with production values
+mkdir -p data
+export PALBOT_IMAGE=ghcr.io/<your-github-user>/palbot:main
+docker compose -f docker-compose.server.yml pull
+docker compose -f docker-compose.server.yml up -d
+```
+
+To update after a new push to `main`:
+
+```bash
+export PALBOT_IMAGE=ghcr.io/<your-github-user>/palbot:main
+docker compose -f docker-compose.server.yml pull
+docker compose -f docker-compose.server.yml up -d
+```
+
 ## Command Behavior
 
 - `!startpal`
