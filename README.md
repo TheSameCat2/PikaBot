@@ -152,11 +152,26 @@ docker compose -f docker-compose.server.yml up -d
 
 Use `docker-compose.server.yml` as your Stack file and set environment variables in Portainer:
 - `PALBOT_IMAGE=ghcr.io/thesamecat2/palbot:main`
+- `PALBOT_USER=0:0` (default; avoids Unraid bind permission issues)
 - `PALBOT_DATA_PATH=/mnt/user/appdata/palbot/data`
 - bot config values (`MATRIX_*`, `ALLOWED_MXIDS`, `RCON_*`, etc.)
 
 If your Palworld RCON is published on the Unraid host, keep:
 - `RCON_HOST=host.docker.internal`
+
+### Troubleshooting: `/data/sync.token.tmp: permission denied`
+
+If logs show:
+- `save initial sync token: open /data/sync.token.tmp: permission denied`
+
+Then the bind mount path is not writable by the container runtime user.
+
+Quick fix (default in this repo):
+- run container as `PALBOT_USER=0:0` in `docker-compose.server.yml`/Portainer.
+
+Alternative fix (non-root):
+1. Set `PALBOT_USER` to your desired UID:GID.
+2. Ensure `PALBOT_DATA_PATH` ownership/permissions match that UID:GID.
 
 ## Command Behavior
 
