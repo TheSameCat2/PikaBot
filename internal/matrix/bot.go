@@ -149,11 +149,14 @@ func (b *Bot) handleMessage(ctx context.Context, evt *event.Event) {
 		return
 	}
 
-	if err := evt.Content.ParseRaw(evt.Type); err != nil {
-		b.log.Warn("failed parsing matrix event content", "event_id", evt.ID.String(), "err", err.Error())
-		return
-	}
 	content := evt.Content.AsMessage()
+	if content == nil {
+		if err := evt.Content.ParseRaw(evt.Type); err != nil && !errors.Is(err, event.ErrContentAlreadyParsed) {
+			b.log.Warn("failed parsing matrix event content", "event_id", evt.ID.String(), "err", err.Error())
+			return
+		}
+		content = evt.Content.AsMessage()
+	}
 	if content == nil || !content.MsgType.IsText() {
 		return
 	}
